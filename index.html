@@ -6,32 +6,119 @@
   <title>Musfir Birthday Countdown</title>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@300;600;800&display=swap" rel="stylesheet">
   <style>
-    :root{--bg1:#89f7fe; --bg2:#66a6ff; --accent:#00b4d8; --card:#ffffffcc;}
+    :root{
+      --bg1:#89f7fe; 
+      --bg2:#66a6ff; 
+      --accent:#00b4d8; 
+      --card:#ffffffcc;
+    }
     *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;background:linear-gradient(135deg,var(--bg1),var(--bg2));font-family:'Nunito',system-ui,Arial;color:#fff;text-align:center;overflow-x:hidden;overflow-y:hidden}
-    .countdown-card{background:var(--card);padding:22px;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,0.15);display:inline-block;margin-top:80px;min-width:320px}
+    body{
+      margin:0;
+      min-height:100vh;
+      background:linear-gradient(135deg,var(--bg1),var(--bg2));
+      font-family:'Nunito',system-ui,Arial;
+      color:#fff;
+      text-align:center;
+      overflow-x:hidden;
+      overflow-y:hidden;
+      position: relative;
+    }
+    .countdown-card{
+      background:var(--card);
+      padding:22px;
+      border-radius:16px;
+      box-shadow:0 8px 30px rgba(0,0,0,0.15);
+      display:inline-block;
+      margin-top:80px;
+      min-width:320px;
+    }
     .time{font-size:28px;font-weight:800;color:#003366}
     .btn{cursor:pointer;padding:10px 14px;border-radius:12px;border:none;font-weight:700;transition:background 0.3s,transform 0.2s}
     .btn:hover{transform:scale(1.05)}
-    .btn-play{background:#00b4d8;color:white;margin-top:10px}
+    .btn-play{background:#00b4d8;color:white;margin-top:10px} 
 
-    .gallery{display:none;max-width:1100px;margin:28px auto;padding:16px;gap:12px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
-    .photo{position:relative;border-radius:12px;overflow:hidden;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,0.12);transform-origin:center;transition:transform .18s}
+    .gallery{
+      display:none;
+      max-width:1100px;
+      margin:28px auto;
+      padding:16px;
+      gap:12px;
+      grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+      display: grid;
+    }
+    .photo{
+      position:relative;
+      border-radius:12px;
+      overflow:hidden;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(0,0,0,0.12);
+      transform-origin:center;
+      transition:transform .18s;
+    }
     .photo:hover{transform:translateY(-6px) scale(1.02)}
     .photo img{display:block;width:100%;height:160px;object-fit:cover}
-    .tooltip{position:absolute;left:8px;bottom:8px;background:linear-gradient(90deg,#00000088,#00000055);color:#fff;padding:6px 8px;border-radius:8px;font-size:13px}
+    .tooltip{
+      position:absolute;
+      left:8px;
+      bottom:8px;
+      background:linear-gradient(90deg,#00000088,#00000055);
+      color:#fff;
+      padding:6px 8px;
+      border-radius:8px;
+      font-size:13px;
+    }
 
-    .modal-back{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
-    .modal{background:white;border-radius:12px;max-width:520px;width:100%;padding:16px;box-shadow:0 10px 40px rgba(0,0,0,0.3);text-align:center}
+    .modal-back{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.5);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:50;
+    }
+    .modal{
+      background:white;
+      border-radius:12px;
+      max-width:520px;
+      width:100%;
+      padding:16px;
+      box-shadow:0 10px 40px rgba(0,0,0,0.3);
+      text-align:center;
+    }
     .modal h3{margin-bottom:12px;color:#0077b6}
 
     .reveal{display:none;text-align:center;margin-top:18px}
-    .reveal .message{font-family:'Pacifico',cursive;font-size:40px;color:#fff;text-shadow:0 6px 24px rgba(0,0,0,0.2)}
+    .reveal .message{
+      font-family:'Pacifico',cursive;
+      font-size:40px;
+      color:#fff;
+      text-shadow:0 6px 24px rgba(0,0,0,0.2);
+    }
 
     .controls{display:none;gap:10px;justify-content:center;margin:20px}
 
-    .balloon{position:absolute;width:50px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;animation:floatUp 8s linear infinite;}
-    @keyframes floatUp{0%{transform:translateY(100vh) rotate(0deg);}100%{transform:translateY(-200vh) rotate(360deg);}}
+    /* Balloons */
+    .balloon{
+      position: fixed;
+      bottom: -100px; /* start below the screen */
+      width: 50px;
+      height: 70px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      animation: floatUp 8s linear forwards;
+      z-index: 1000;
+    }
+    @keyframes floatUp{
+      0%{transform: translateY(0) rotate(0deg);}
+      100%{transform: translateY(-120vh) rotate(360deg);}
+    }
   </style>
 </head>
 <body>
@@ -93,7 +180,7 @@
     controls.style.display = 'none';
 
     let timerHandle = null;
-    const target = Date.now() + 60000;
+    const target = Date.now() + 60000; // 1 min countdown for testing
 
     function updateTimer(){
       const now = Date.now();
@@ -118,9 +205,9 @@
     timerHandle = setInterval(updateTimer,1000);
     updateTimer();
 
+    // Music (simple)
     let audioCtx = null;
     let isPlaying = false;
-
     function startMusic(){
       if(isPlaying) return;
       audioCtx = new(window.AudioContext||window.webkitAudioContext)();
@@ -143,15 +230,14 @@
       isPlaying = true;
       musicBtn.textContent='Stop Music';
     }
-
     function stopMusic(){
       if(audioCtx && audioCtx.state!=='closed'){audioCtx.close(); audioCtx=null;}
       isPlaying = false;
       musicBtn.textContent='Play Music';
     }
-
     musicBtn.addEventListener('click',()=>{ isPlaying ? stopMusic() : startMusic(); });
 
+    // Gifts modal
     document.querySelectorAll('.photo').forEach(photo=>{
       photo.addEventListener('click',()=>{
         const idx = Number(photo.dataset.index);
@@ -159,7 +245,6 @@
         modalBack.style.display = 'flex';
       });
     });
-
     okBtn.addEventListener('click',()=>{ modalBack.style.display='none'; });
     modalBack.addEventListener('click',e=>{ if(e.target===modalBack){modalBack.style.display='none';} });
 
@@ -167,27 +252,28 @@
     let balloonInterval = null;
     function releaseBalloons(){
       balloonInterval = setInterval(()=>{
-        const b=document.createElement('div');
+        const b = document.createElement('div');
         b.className='balloon';
-        b.style.left=Math.random()*90+'vw';
-        b.style.backgroundColor=`hsl(${Math.random()*360},70%,60%)`;
+        b.style.left = Math.random()*90 + 'vw';
+        b.style.backgroundColor = `hsl(${Math.random()*360},70%,60%)`;
         document.body.appendChild(b);
-        setTimeout(()=>b.remove(),8000);
+        setTimeout(()=>b.remove(),8000); // remove after animation
       },400);
     }
-    function stopBalloons(){
-      clearInterval(balloonInterval);
-    }
+    function stopBalloons(){ clearInterval(balloonInterval); }
     balloonBtn.addEventListener('click',releaseBalloons);
     stopBalloonBtn.addEventListener('click',stopBalloons);
 
     // Post-countdown music
     let postAudio = null;
     let postPlaying = false;
-
     musicStopBtn.addEventListener('click',()=>{
-      if(postPlaying){ postAudio.pause(); postAudio=null; postPlaying=false; musicStopBtn.textContent='Play Music'; }
-      else{
+      if(postPlaying){ 
+        postAudio.pause(); 
+        postAudio=null; 
+        postPlaying=false; 
+        musicStopBtn.textContent='Play Music'; 
+      } else { 
         postAudio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
         postAudio.loop=true;
         postAudio.play();
