@@ -324,9 +324,17 @@
     return targetDate.getTime() - now.getTime();
   }
 
+  function msUntilOneMinuteFromNow() {
+  const now = getEMEATime();
+  const targetDate = new Date(now.getTime() + 1*60*1000); // 1 minute later
+  return targetDate.getTime() - now.getTime();
+}
+
+
   // Update countdown display every second
   function updateCountdown() {
-    const msLeft = msUntilEMEASpecificDate();
+    //const msLeft = msUntilEMEASpecificDate();
+    const msLeft = msUntilOneMinuteFromNow();
 
     if (msLeft <= 0) {
       clearInterval(countdownInterval);
