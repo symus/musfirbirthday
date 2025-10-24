@@ -111,7 +111,11 @@ body{
   color: white;
   font-weight: bold;
   z-index: 1000;
-  animation: floatUp linear forwards, sway 2s ease-in-out infinite alternate;
+  pointer-events: none;
+  animation-name: floatUp, sway;
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: 1, infinite;
+  animation-fill-mode: forwards, none;
 }
 @keyframes floatUp{
   0%{transform: translateY(0) rotate(0deg);}
@@ -184,7 +188,8 @@ controls.style.display='none';
 
 // Countdown to 27th Oct 2025
 //const target = new Date('2025-10-27T00:00:00').getTime();
-  const target = Date.now() + 5000; // 5 minute countdown
+const target = Date.now() + 5000; // 1 minute countdown
+
 function updateTimer(){
   const now = Date.now();
   const diff = target - now;
@@ -207,7 +212,7 @@ function updateTimer(){
 const timerHandle = setInterval(updateTimer,1000);
 updateTimer();
 
-// Music
+// Music (simple synth)
 let audioCtx = null;
 let isPlaying=false;
 function startMusic(){
@@ -248,28 +253,37 @@ modalBack.addEventListener('click',e=>{if(e.target===modalBack){modalBack.style.
 
 // Balloons
 let balloonInterval = null;
-function releaseBalloons(){
-  if(balloonInterval) return;
-  balloonInterval = setInterval(()=>{
-    const b=document.createElement('div');
-    b.className='balloon';
-    const size=30+Math.random()*40;
-    b.style.width=size+'px';
-    b.style.height=size*1.4+'px';
-    b.style.left=Math.random()*90+'vw';
-    b.style.backgroundColor=`hsl(${Math.random()*360},70%,60%)`;
-    const duration = 6 + Math.random()*4; // 6-10s
-    b.style.animationDuration = `${duration}s, 2s`;
-    document.body.appendChild(b);
-    // remove balloon after it goes off screen
-    b.addEventListener('animationend',()=>b.remove());
-  },300);
-}
-function stopBalloons(){clearInterval(balloonInterval);balloonInterval=null;}
-balloonBtn.addEventListener('click',releaseBalloons);
-stopBalloonBtn.addEventListener('click',stopBalloons);
+function releaseBalloons() {
+  if (balloonInterval) return;
+  balloonInterval = setInterval(() => {
+    const b = document.createElement('div');
+    b.className = 'balloon';
 
-// Post countdown HBD music
+    const size = 30 + Math.random() * 40;
+    b.style.width = size + 'px';
+    b.style.height = size*1.4 + 'px';
+    b.style.left = Math.random() * 90 + 'vw';
+    b.style.backgroundColor = `hsl(${Math.random()*360},70%,60%)`;
+    const duration = 6 + Math.random() * 4;
+    b.style.animationDuration = `${duration}s, 2s`;
+
+    document.body.appendChild(b);
+
+    b.addEventListener('animationend', e => {
+      if(e.animationName==='floatUp') b.remove();
+    });
+  }, 300);
+}
+
+function stopBalloons() {
+  clearInterval(balloonInterval);
+  balloonInterval = null;
+}
+
+balloonBtn.addEventListener('click', releaseBalloons);
+stopBalloonBtn.addEventListener('click', stopBalloons);
+
+// Post-countdown HBD music
 let postAudio=null,postPlaying=false;
 musicStopBtn.addEventListener('click',()=>{
   if(postPlaying){postAudio.pause();postAudio=null;postPlaying=false;musicStopBtn.textContent='Play Music';}
