@@ -1,428 +1,153 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Happy Birthday Musfir!</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Musfir Birthday Countdown</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@300;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg1:#89f7fe; --bg2:#66a6ff; --accent:#00b4d8; --card:#ffffffcc;}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:linear-gradient(135deg,var(--bg1),var(--bg2));font-family:'Nunito',system-ui,Arial;color:#fff;text-align:center;overflow-x:hidden}
+    .countdown-card{background:var(--card);padding:22px;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,0.15);display:inline-block;margin-top:80px;min-width:320px}
+    .time{font-size:28px;font-weight:800;color:#003366}
+    .btn{cursor:pointer;padding:10px 14px;border-radius:12px;border:none;font-weight:700;transition:background 0.3s,transform 0.2s}
+    .btn:hover{transform:scale(1.05)}
+    .btn-play{background:#00b4d8;color:white;margin-top:10px}
 
-  body {
-    margin: 0; padding: 0;
-    background: linear-gradient(135deg, #0047ab, #0073e6);
-    font-family: 'Comic Neue', cursive, sans-serif;
-    color: #e0f0ff;
-    overflow-x: hidden;
-  }
+    .gallery{display:none;max-width:1100px;margin:28px auto;padding:16px;gap:12px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+    .photo{position:relative;border-radius:12px;overflow:hidden;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,0.12);transform-origin:center;transition:transform .18s}
+    .photo:hover{transform:translateY(-6px) scale(1.02)}
+    .photo img{display:block;width:100%;height:160px;object-fit:cover}
+    .tooltip{position:absolute;left:8px;bottom:8px;background:linear-gradient(90deg,#00000088,#00000055);color:#fff;padding:6px 8px;border-radius:8px;font-size:13px}
 
-  header {
-    text-align: center;
-    padding: 2rem 1rem 1rem;
-    font-size: 3rem;
-    text-shadow: 0 0 8px #0099ff, 0 0 15px #00ccff;
-  }
+    .modal-back{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+    .modal{background:white;border-radius:12px;max-width:520px;width:100%;padding:16px;box-shadow:0 10px 40px rgba(0,0,0,0.3);text-align:center}
+    .modal h3{margin-bottom:12px;color:#0077b6}
 
-  #message {
-    text-align: center;
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    font-weight: 600;
-    text-shadow: 0 0 6px #00cfff, 0 0 12px #00e5ff;
-    display: none;
-  }
-
-  #countdown-container {
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-
-  #countdown {
-    font-size: 3rem;
-    font-weight: bold;
-    letter-spacing: 0.2em;
-    text-shadow: 2px 2px 6px #003366;
-  }
-
-  button {
-    background: #0099ff;
-    border: none;
-    border-radius: 30px;
-    padding: 0.6rem 1.4rem;
-    font-size: 1.2rem;
-    cursor: pointer;
-    margin: 0.5rem;
-    color: white;
-    box-shadow: 0 0 12px #00b3ff;
-    transition: background-color 0.3s ease;
-  }
-  button:hover {
-    background: #007acc;
-  }
-
-  .gallery {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-bottom: 2rem;
-    display: none; /* hidden initially */
-  }
-
-  .gallery img {
-    width: 140px;
-    height: 140px;
-    border-radius: 15px;
-    object-fit: cover;
-    cursor: pointer;
-    box-shadow: 0 0 8px #00bfff;
-    transition: transform 0.3s ease;
-  }
-  .gallery img:hover {
-    transform: scale(1.1);
-  }
-
-  /* Tooltip container */
-  .tooltip {
-    position: relative;
-    display: inline-block;
-  }
-  /* Tooltip text */
-  .tooltip .tooltiptext {
-    visibility: hidden;
-    width: 110px;
-    background-color: #0099ff;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 7px;
-    position: absolute;
-    z-index: 10;
-    bottom: 125%; 
-    left: 50%; 
-    margin-left: -55px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    font-weight: 700;
-  }
-  /* Show the tooltip text on hover */
-  .tooltip:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
-  }
-
-  /* Popup container */
-  #popup {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(0,0,0,0.85);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 20;
-  }
-
-  #popup .popup-content {
-    background: #002f6c;
-    border-radius: 15px;
-    color: #cce6ff;
-    padding: 1.8rem 2.8rem;
-    max-width: 320px;
-    text-align: center;
-    box-shadow: 0 0 25px 5px #0099ff;
-    font-family: 'Comic Neue', cursive, sans-serif;
-  }
-
-  #popup .popup-content p {
-    font-size: 1.2rem;
-    margin-bottom: 1.5rem;
-  }
-
-  #popup button {
-    background: #0099ff;
-    color: white;
-    font-size: 1rem;
-    padding: 0.6rem 1.6rem;
-    border-radius: 30px;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 0 14px #00b3ff;
-  }
-  #popup button:hover {
-    background: #007acc;
-  }
-
-  /* Balloon styling */
-  .balloon {
-    position: fixed;
-    bottom: -150px;
-    width: 50px;
-    height: 70px;
-    background: radial-gradient(circle at 30% 30%, #00aaff, #0066cc);
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    box-shadow: inset -10px -15px 15px #3399ff;
-    animation: floatUp linear forwards;
-    z-index: 15;
-  }
-
-  .balloon.blue {
-    background: radial-gradient(circle at 30% 30%, #3399ff, #003399);
-    box-shadow: inset -10px -15px 15px #66b3ff;
-  }
-  .balloon.green {
-    background: radial-gradient(circle at 30% 30%, #33cc99, #026644);
-    box-shadow: inset -10px -15px 15px #66ffbb;
-  }
-  .balloon.yellow {
-    background: radial-gradient(circle at 30% 30%, #66ccff, #005580);
-    box-shadow: inset -10px -15px 15px #99e6ff;
-  }
-
-  @keyframes floatUp {
-    0% {
-      bottom: -150px;
-      opacity: 1;
-      transform: translateX(0) rotate(0deg);
-    }
-    100% {
-      bottom: 110%;
-      opacity: 0;
-      transform: translateX(40px) rotate(360deg);
-    }
-  }
-
-  /* Container for control buttons */
-  #controls {
-    text-align: center;
-    margin-bottom: 3rem;
-    display: none; /* hidden initially */
-  }
-
-  /* Additional play music button below countdown */
-  #music-wait {
-    text-align: center;
-    margin-bottom: 2rem;
-    display: none; /* hidden initially */
-  }
-
-  #music-wait button {
-    background: #0066cc;
-    box-shadow: 0 0 10px #004a99;
-  }
-  #music-wait button:hover {
-    background: #004a99;
-  }
-</style>
+    .reveal{display:none;text-align:center;margin-top:18px}
+    .reveal .message{font-family:'Pacifico',cursive;font-size:40px;color:#fff;text-shadow:0 6px 24px rgba(0,0,0,0.2)}
+  </style>
 </head>
 <body>
-
-<header>Happy Birthday, Musfir!</header>
-<div id="message">You make our life happy..</div>
-
-<div id="countdown-container">
-  <div id="countdown">Loading countdown...</div>
-</div>
-
-<div id="music-wait">
-  <button id="playMusicWait">Wait till your birthday music</button>
-</div>
-
-<div class="gallery" id="gallery">
-  <div class="tooltip">
-    <img src="https://picsum.photos/id/1011/140/140" alt="Gift 1" data-index="0" />
-    <span class="tooltiptext">Click to get gift</span>
+  <div class="countdown-card">
+    <div id="countdownMsg" style="font-weight:700;color:#004080;margin-bottom:10px;">--</div>
+    <div id="timeDisplay" class="time">-- : -- : -- : --</div>
+    <div style="font-size:13px;color:#004080;margin-top:4px">Days : Hours : Minutes : Seconds</div>
+    <button id="musicBtn" class="btn btn-play">Play Music</button>
   </div>
-  <div class="tooltip">
-    <img src="https://picsum.photos/id/1025/140/140" alt="Gift 2" data-index="1" />
-    <span class="tooltiptext">Click to get gift</span>
+
+  <section class="reveal" id="revealSection">
+    <div class="message">Happy Birthday Musfir! 🎂🎈</div>
+    <p style="color:#fff;font-weight:600;margin-top:8px">We love you — open your gifts below!</p>
+  </section>
+
+  <section class="gallery" id="gallery">
+    <div class="photo" data-index="0" title="Click to get gift"><img src="https://picsum.photos/seed/pic1/400/300"><div class="tooltip">Click to get gift</div></div>
+    <div class="photo" data-index="1" title="Click to get gift"><img src="https://picsum.photos/seed/pic2/400/300"><div class="tooltip">Click to get gift</div></div>
+    <div class="photo" data-index="2" title="Click to get gift"><img src="https://picsum.photos/seed/pic3/400/300"><div class="tooltip">Click to get gift</div></div>
+    <div class="photo" data-index="3" title="Click to get gift"><img src="https://picsum.photos/seed/pic4/400/300"><div class="tooltip">Click to get gift</div></div>
+    <div class="photo" data-index="4" title="Click to get gift"><img src="https://picsum.photos/seed/pic5/400/300"><div class="tooltip">Click to get gift</div></div>
+    <div class="photo" data-index="5" title="Click to get gift"><img src="https://picsum.photos/seed/pic6/400/300"><div class="tooltip">Click to get gift</div></div>
+  </section>
+
+  <div id="modalBack" class="modal-back">
+    <div class="modal"><h3 id="modalMessage">Gift message</h3><button id="okBtn" class="btn btn-play">OK</button></div>
   </div>
-  <div class="tooltip">
-    <img src="https://picsum.photos/id/106/140/140" alt="Gift 3" data-index="2" />
-    <span class="tooltiptext">Click to get gift</span>
-  </div>
-  <div class="tooltip">
-    <img src="https://picsum.photos/id/1084/140/140" alt="Gift 4" data-index="3" />
-    <span class="tooltiptext">Click to get gift</span>
-  </div>
-  <div class="tooltip">
-    <img src="https://picsum.photos/id/1081/140/140" alt="Gift 5" data-index="4" />
-    <span class="tooltiptext">Click to get gift</span>
-  </div>
-  <div class="tooltip">
-    <img src="https://picsum.photos/id/1035/140/140" alt="Gift 6" data-index="5" />
-    <span class="tooltiptext">Click to get gift</span>
-  </div>
-</div>
 
-<div id="popup">
-  <div class="popup-content">
-    <p id="popup-text"></p>
-    <button id="popup-ok-btn">OK</button>
-  </div>
-</div>
+  <script>
+    const countdownMsg = document.getElementById('countdownMsg');
+    const timeDisplay = document.getElementById('timeDisplay');
+    const revealSection = document.getElementById('revealSection');
+    const gallery = document.getElementById('gallery');
+    const musicBtn = document.getElementById('musicBtn');
+    const modalBack = document.getElementById('modalBack');
+    const modalMessage = document.getElementById('modalMessage');
+    const okBtn = document.getElementById('okBtn');
 
-<div id="controls">
-  <button id="startBalloons">Start Balloons</button>
-  <button id="stopBalloons">Stop Balloons</button>
-  <button id="playMusic">Play Music</button>
-</div>
+    const giftMessages = [
+      'Check your first gift under the sofa.',
+      'Find your second gift in the refrigerator.',
+      'Your third gift is near the TV.',
+      'Look under your pillow for the fourth gift.',
+      'The fifth gift is in the cupboard.',
+      'Your final gift is behind the curtain.'
+    ];
 
-<audio id="birthday-music" src="https://www.bensound.com/bensound-music/bensound-happyrock.mp3" preload="auto"></audio>
+    // Ensure gallery is hidden initially
+    gallery.style.display = 'none';
 
-<script>
-  const countdownEl = document.getElementById('countdown');
-  const messageEl = document.getElementById('message');
-  const gallery = document.getElementById('gallery');
-  const popup = document.getElementById('popup');
-  const popupText = document.getElementById('popup-text');
-  const popupOk = document.getElementById('popup-ok-btn');
-  const controls = document.getElementById('controls');
-  const music = document.getElementById('birthday-music');
-  const musicWaitBtn = document.getElementById('playMusicWait');
-  const musicWaitContainer = document.getElementById('music-wait');
+    let timerHandle = null;
+    const target = Date.now() + 60000; // 1 minute countdown
 
-  // Gift notes for each picture
-  const giftNotes = [
-    "Gift 1: In the pink box under the sofa.",
-    "Gift 2: Hidden inside the blue drawer in the study.",
-    "Gift 3: Behind the curtains in the living room.",
-    "Gift 4: Inside the fridge on the top shelf.",
-    "Gift 5: Under the bed in your room.",
-    "Gift 6: In the garden near the big tree."
-  ];
+    function updateTimer(){
+      const now = Date.now();
+      const diff = target - now;
+      if(diff<=0){
+        clearInterval(timerHandle);
+        revealSection.style.display='block';
+        gallery.style.display='grid';
+        countdownMsg.textContent='';
+        timeDisplay.textContent='';
+        return;
+      }
+      const days=Math.floor(diff/(1000*60*60*24));
+      const hrs=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+      const mins=Math.floor((diff%(1000*60*60))/(1000*60));
+      const secs=Math.floor((diff%(1000*60))/1000);
+      timeDisplay.textContent=`${String(days).padStart(2,'0')} : ${String(hrs).padStart(2,'0')} : ${String(mins).padStart(2,'0')} : ${String(secs).padStart(2,'0')}`;
+      countdownMsg.textContent=`${days}d ${hrs}h to go for Musfir's Birthday!`;
+    }
 
-  const collectedGifts = new Set();
+    timerHandle = setInterval(updateTimer,1000);
+    updateTimer();
 
-  // Get current EMEA time (Europe/London)
-  function getEMEATime() {
-    const now = new Date();
-    const timeZone = 'Europe/London';
-    const options = { timeZone, hour12: false };
-    const formatter = new Intl.DateTimeFormat('en-GB', {
-      ...options,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
+    // Music setup
+    let audioCtx = null;
+    let isPlaying = false;
+
+    function startMusic(){
+      if(isPlaying) return;
+      audioCtx = new(window.AudioContext||window.webkitAudioContext)();
+      const notes=[264,264,297,264,352,330,264,264,297,264,396,352,264,264,528,440,352,330,297,466,466,440,352,396,352];
+      const dur=0.32;
+      let t=audioCtx.currentTime+0.1;
+      notes.forEach((f,i)=>{
+        const o=audioCtx.createOscillator();
+        const g=audioCtx.createGain();
+        o.type='sine';
+        o.frequency.value=f;
+        o.connect(g);
+        g.connect(audioCtx.destination);
+        g.gain.setValueAtTime(0,t+i*dur);
+        g.gain.linearRampToValueAtTime(0.15,t+i*dur+0.01);
+        g.gain.linearRampToValueAtTime(0.0001,t+i*dur+dur-0.05);
+        o.start(t+i*dur);
+        o.stop(t+i*dur+dur);
+      });
+      isPlaying = true;
+      musicBtn.textContent='Stop Music';
+    }
+
+    function stopMusic(){
+      if(audioCtx && audioCtx.state!=='closed'){audioCtx.close(); audioCtx=null;}
+      isPlaying = false;
+      musicBtn.textContent='Play Music';
+    }
+
+    musicBtn.addEventListener('click',()=>{ isPlaying ? stopMusic() : startMusic(); });
+
+    // Gift popups
+    document.querySelectorAll('.photo').forEach(photo=>{
+      photo.addEventListener('click',()=>{
+        const idx = Number(photo.dataset.index);
+        modalMessage.textContent = giftMessages[idx];
+        modalBack.style.display = 'flex';
+      });
     });
-    const parts = formatter.formatToParts(now);
-    const year = parts.find(p => p.type === 'year').value;
-    const month = parts.find(p => p.type === 'month').value;
-    const day = parts.find(p => p.type === 'day').value;
-    const hour = parts.find(p => p.type === 'hour').value;
-    const minute = parts.find(p => p.type === 'minute').value;
-    const second = parts.find(p => p.type === 'second').value;
-    return new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`);
-  }
 
-  // Get milliseconds left until midnight Oct 27, 2025 Europe/London
-  function msUntilEMEASpecificDate() {
-    const now = getEMEATime();
-    // Note month for Date is 0-based, so 9=October
-    const targetDate = new Date(2025, 9, 27, 0, 0, 0);
-    return targetDate.getTime() - now.getTime();
-  }
-
-  function msUntilOneMinuteFromNow() {
-  const now = getEMEATime();
-  const targetDate = new Date(now.getTime() + 1*60*1000); // 1 minute later
-  return targetDate.getTime() - now.getTime();
-}
-
-
-  // Update countdown display every second
-  function updateCountdown() {
-    //const msLeft = msUntilEMEASpecificDate();
-    const msLeft = msUntilOneMinuteFromNow();
-
-    if (msLeft <= 0) {
-      clearInterval(countdownInterval);
-      countdownEndActions();
-      return;
-    }
-
-    let secondsLeft = Math.floor(msLeft / 1000);
-    const hours = Math.floor(secondsLeft / 3600);
-    secondsLeft %= 3600;
-    const minutes = Math.floor(secondsLeft / 60);
-    const seconds = secondsLeft % 60;
-
-    countdownEl.textContent = 
-      (hours < 10 ? '0' + hours : hours) + ':' +
-      (minutes < 10 ? '0' + minutes : minutes) + ':' +
-      (seconds < 10 ? '0' + seconds : seconds);
-  }
-
-  function countdownEndActions() {
-    countdownEl.style.display = 'none';
-    messageEl.style.display = 'block';
-    gallery.style.display = 'flex';
-    controls.style.display = 'block';
-    musicWaitContainer.style.display = 'none';
-  }
-
-  // Start countdown interval
-  let countdownInterval = setInterval(updateCountdown, 1000);
-  updateCountdown(); // Immediately update once
-
-  // Picture click event for gift popups
-  gallery.addEventListener('click', e => {
-    if (e.target.tagName === 'IMG') {
-      const idx = e.target.getAttribute('data-index');
-      popupText.textContent = giftNotes[idx];
-      popup.style.display = 'flex';
-      collectedGifts.add(Number(idx));
-      e.target.parentNode.querySelector('.tooltiptext').textContent = '';
-      if (collectedGifts.size === giftNotes.length) controls.style.display = 'block';
-    }
-  });
-
-  popupOk.addEventListener('click', () => {
-    popup.style.display = 'none';
-  });
-
-  // Balloon animation
-  let balloonTimer = null;
-
-  function createBalloon() {
-    const balloon = document.createElement('div');
-    balloon.classList.add('balloon');
-    const colors = ['blue', 'green', 'yellow'];
-    balloon.classList.add(colors[Math.floor(Math.random() * colors.length)]);
-    balloon.style.left = Math.random() * 100 + 'vw';
-    balloon.style.animationDuration = (5 + Math.random() * 5) + 's';
-
-    document.body.appendChild(balloon);
-
-    balloon.addEventListener('animationend', () => {
-      balloon.remove();
-    });
-  }
-
-  function startBalloons() {
-    if (!balloonTimer) balloonTimer = setInterval(createBalloon, 300);
-  }
-  function stopBalloons() {
-    clearInterval(balloonTimer);
-    balloonTimer = null;
-    document.querySelectorAll('.balloon').forEach(b => b.remove());
-  }
-
-  document.getElementById('startBalloons').addEventListener('click', startBalloons);
-  document.getElementById('stopBalloons').addEventListener('click', stopBalloons);
-
-  // Play music buttons toggle
-  function toggleMusic() {
-    if (music.paused) {
-      music.play();
-    } else {
-      music.pause();
-    }
-  }
-  document.getElementById('playMusic').addEventListener('click', toggleMusic);
-  musicWaitBtn.addEventListener('click', toggleMusic);
-</script>
-
+    okBtn.addEventListener('click',()=>{ modalBack.style.display='none'; });
+    modalBack.addEventListener('click',e=>{ if(e.target===modalBack){modalBack.style.display='none';} });
+  </script>
 </body>
 </html>
