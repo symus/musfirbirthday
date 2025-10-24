@@ -27,6 +27,8 @@
 
     .reveal{display:none;text-align:center;margin-top:18px}
     .reveal .message{font-family:'Pacifico',cursive;font-size:40px;color:#fff;text-shadow:0 6px 24px rgba(0,0,0,0.2)}
+
+    .controls{display:none;gap:10px;justify-content:center;margin:20px}
   </style>
 </head>
 <body>
@@ -55,12 +57,19 @@
     <div class="modal"><h3 id="modalMessage">Gift message</h3><button id="okBtn" class="btn btn-play">OK</button></div>
   </div>
 
+  <div class="controls" id="controls">
+    <button id="balloonBtn" class="btn btn-play">Release Balloons</button>
+    <button id="stopBalloonBtn" class="btn btn-play">Stop Balloons</button>
+    <button id="musicStopBtn" class="btn btn-play">Stop Music</button>
+  </div>
+
   <script>
     const countdownMsg = document.getElementById('countdownMsg');
     const timeDisplay = document.getElementById('timeDisplay');
     const revealSection = document.getElementById('revealSection');
     const gallery = document.getElementById('gallery');
     const musicBtn = document.getElementById('musicBtn');
+    const controls = document.getElementById('controls');
     const modalBack = document.getElementById('modalBack');
     const modalMessage = document.getElementById('modalMessage');
     const okBtn = document.getElementById('okBtn');
@@ -74,8 +83,9 @@
       'Your final gift is behind the curtain.'
     ];
 
-    // Ensure gallery is hidden initially
+    // Ensure gallery and controls are hidden initially
     gallery.style.display = 'none';
+    controls.style.display = 'none';
 
     let timerHandle = null;
     const target = Date.now() + 60000; // 1 minute countdown
@@ -87,6 +97,7 @@
         clearInterval(timerHandle);
         revealSection.style.display='block';
         gallery.style.display='grid';
+        controls.style.display='flex';
         countdownMsg.textContent='';
         timeDisplay.textContent='';
         return;
