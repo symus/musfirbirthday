@@ -111,9 +111,8 @@ body{
   color: white;
   font-weight: bold;
   z-index: 1000;
-  animation: floatUp 8s linear forwards, sway 2s ease-in-out infinite alternate;
+  animation: floatUp linear forwards, sway 2s ease-in-out infinite alternate;
 }
-
 @keyframes floatUp{
   0%{transform: translateY(0) rotate(0deg);}
   100%{transform: translateY(-120vh) rotate(360deg);}
@@ -139,12 +138,12 @@ body{
 </section>
 
 <section class="gallery" id="gallery">
-  <div class="photo" data-index="0" title="Click to get gift1"><img src="1.jpg"><div class="tooltip">Click to get gift1</div></div>
-  <div class="photo" data-index="1" title="Click to get gift2"><img src="2.jpg"><div class="tooltip">Click to get gift2</div></div>
-  <div class="photo" data-index="2" title="Click to get gift3"><img src="3.jpg"><div class="tooltip">Click to get gift3</div></div>
-  <div class="photo" data-index="3" title="Click to get gift4"><img src="4.jpg"><div class="tooltip">Click to get gift4</div></div>
-  <div class="photo" data-index="4" title="Click to get gift5"><img src="5.jpg"><div class="tooltip">Click to get gift5</div></div>
-  <div class="photo" data-index="5" title="Click to get gift6"><img src="6.jpeg"><div class="tooltip">Click to get gift6</div></div>
+  <div class="photo" data-index="0"><img src="1.jpg"><div class="tooltip">Click to get gift1</div></div>
+  <div class="photo" data-index="1"><img src="2.jpg"><div class="tooltip">Click to get gift2</div></div>
+  <div class="photo" data-index="2"><img src="3.jpg"><div class="tooltip">Click to get gift3</div></div>
+  <div class="photo" data-index="3"><img src="4.jpg"><div class="tooltip">Click to get gift4</div></div>
+  <div class="photo" data-index="4"><img src="5.jpg"><div class="tooltip">Click to get gift5</div></div>
+  <div class="photo" data-index="5"><img src="6.jpeg"><div class="tooltip">Click to get gift6</div></div>
 </section>
 
 <div id="modalBack" class="modal-back">
@@ -185,9 +184,8 @@ controls.style.display='none';
 
 // Countdown to 27th Oct 2025
 //const target = new Date('2025-10-27T00:00:00').getTime();
-const target = Date.now() + 5000; // 5 seconds countdown
-
-  function updateTimer(){
+  const target = Date.now() + 5000; // 5 minute countdown
+function updateTimer(){
   const now = Date.now();
   const diff = target - now;
   if(diff<=0){
@@ -209,7 +207,7 @@ const target = Date.now() + 5000; // 5 seconds countdown
 const timerHandle = setInterval(updateTimer,1000);
 updateTimer();
 
-// Simple music tone
+// Music
 let audioCtx = null;
 let isPlaying=false;
 function startMusic(){
@@ -237,7 +235,7 @@ function startMusic(){
 function stopMusic(){if(audioCtx&&audioCtx.state!=='closed'){audioCtx.close();audioCtx=null;}isPlaying=false;musicBtn.textContent='Play Music';}
 musicBtn.addEventListener('click',()=>{isPlaying?stopMusic():startMusic();});
 
-// Gift modal
+// Gifts modal
 document.querySelectorAll('.photo').forEach(photo=>{
   photo.addEventListener('click',()=>{
     const idx = Number(photo.dataset.index);
@@ -260,8 +258,11 @@ function releaseBalloons(){
     b.style.height=size*1.4+'px';
     b.style.left=Math.random()*90+'vw';
     b.style.backgroundColor=`hsl(${Math.random()*360},70%,60%)`;
+    const duration = 6 + Math.random()*4; // 6-10s
+    b.style.animationDuration = `${duration}s, 2s`;
     document.body.appendChild(b);
-    setTimeout(()=>b.remove(),8000);
+    // remove balloon after it goes off screen
+    b.addEventListener('animationend',()=>b.remove());
   },300);
 }
 function stopBalloons(){clearInterval(balloonInterval);balloonInterval=null;}
