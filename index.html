@@ -29,6 +29,9 @@
     .reveal .message{font-family:'Pacifico',cursive;font-size:40px;color:#fff;text-shadow:0 6px 24px rgba(0,0,0,0.2)}
 
     .controls{display:none;gap:10px;justify-content:center;margin:20px}
+
+    .balloon{position:absolute;width:50px;height:70px;border-radius:50%;background:red;animation:floatUp linear infinite;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold}
+    @keyframes floatUp{0%{transform:translateY(100vh) rotate(0deg)}100%{transform:translateY(-200vh) rotate(360deg)}}
   </style>
 </head>
 <body>
@@ -60,7 +63,7 @@
   <div class="controls" id="controls">
     <button id="balloonBtn" class="btn btn-play">Release Balloons</button>
     <button id="stopBalloonBtn" class="btn btn-play">Stop Balloons</button>
-    <button id="musicStopBtn" class="btn btn-play">Stop Music</button>
+    <button id="musicStopBtn" class="btn btn-play">Play Music</button>
   </div>
 
   <script>
@@ -73,6 +76,9 @@
     const modalBack = document.getElementById('modalBack');
     const modalMessage = document.getElementById('modalMessage');
     const okBtn = document.getElementById('okBtn');
+    const balloonBtn = document.getElementById('balloonBtn');
+    const stopBalloonBtn = document.getElementById('stopBalloonBtn');
+    const musicStopBtn = document.getElementById('musicStopBtn');
 
     const giftMessages = [
       'Check your first gift under the sofa.',
@@ -83,12 +89,12 @@
       'Your final gift is behind the curtain.'
     ];
 
-    // Ensure gallery and controls are hidden initially
+    // Countdown initial setup
     gallery.style.display = 'none';
     controls.style.display = 'none';
 
     let timerHandle = null;
-    const target = Date.now() + 60000; // 1 minute countdown
+    const target = Date.now() + 60000;
 
     function updateTimer(){
       const now = Date.now();
@@ -113,7 +119,7 @@
     timerHandle = setInterval(updateTimer,1000);
     updateTimer();
 
-    // Music setup
+    // Music setup for counter
     let audioCtx = null;
     let isPlaying = false;
 
@@ -159,6 +165,41 @@
 
     okBtn.addEventListener('click',()=>{ modalBack.style.display='none'; });
     modalBack.addEventListener('click',e=>{ if(e.target===modalBack){modalBack.style.display='none';} });
+
+    // Balloons
+    let balloonInterval = null;
+    function releaseBalloons(){
+      balloonInterval = setInterval(()=>{
+        const b=document.createElement('div');
+        b.className='balloon';
+        b.style.left=Math.random()*90+'vw';
+        b.style.backgroundColor=`hsl(${Math.random()*360},70%,60%)`;
+        document.body.appendChild(b);
+        setTimeout(()=>b.remove(),10000);
+      },500);
+    }
+
+    function stopBalloons(){
+      clearInterval(balloonInterval);
+    }
+
+    balloonBtn.addEventListener('click',releaseBalloons);
+    stopBalloonBtn.addEventListener('click',stopBalloons);
+
+    // Music for post-countdown
+    let postAudio = null;
+    let postPlaying = false;
+
+    musicStopBtn.addEventListener('click',()=>{
+      if(postPlaying){ postAudio.pause(); postAudio=null; postPlaying=false; musicStopBtn.textContent='Play Music'; }
+      else{
+        postAudio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+        postAudio.loop=true;
+        postAudio.play();
+        postPlaying=true;
+        musicStopBtn.textContent='Stop Music';
+      }
+    });
   </script>
 </body>
 </html>
