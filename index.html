@@ -1,433 +1,377 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Happy Birthday — Surprise!</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@300;600&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Happy Birthday Musfir!</title>
 <style>
-  :root{
-    --bg1:#FFDEE9; --bg2:#B5FFFC;
-    --card:#fff; --accent:#FF6B6B; --accent2:#FFD93D;
-  }
-  html,body{height:100%; margin:0; font-family:Inter,system-ui,Segoe UI,Arial;}
-  body{
-    background: linear-gradient(135deg,var(--bg1) 0%, #FFEFBA 35%, var(--bg2) 100%);
-    display:flex; align-items:center; justify-content:center; padding:28px;
-    overflow:hidden;
-  }
-  .page{
-    width:100%; max-width:1100px; background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.85));
-    border-radius:18px; padding:24px; box-shadow:0 10px 40px rgba(0,0,0,0.12); position:relative;
+  @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+
+  body {
+    margin: 0; padding: 0;
+    background: linear-gradient(135deg, #ff70a6, #a159e6);
+    font-family: 'Comic Neue', cursive, sans-serif;
+    color: #fff;
+    overflow-x: hidden;
   }
 
-  header{display:flex; align-items:center; gap:16px;}
-  .logo{
-    width:86px; height:86px; background:linear-gradient(135deg,var(--accent),#FF9A9E); border-radius:16px;
-    display:flex; align-items:center; justify-content:center; color:white; font-family:'Fredoka One'; font-size:22px;
-    box-shadow:0 6px 18px rgba(255,107,107,0.25), inset 0 -6px 12px rgba(0,0,0,0.06);
+  header {
+    text-align: center;
+    padding: 2rem 1rem 1rem;
+    font-size: 3rem;
+    text-shadow: 0 0 5px #ff00aa, 0 0 10px #ff0088;
   }
-  h1{margin:0; font-family:'Fredoka One'; color:#4b2e83; font-size:28px;}
-  p.lead{margin:6px 0 18px; color:#4b2e83; opacity:0.9; font-weight:600;}
 
-  .countdown{
-    display:flex; gap:12px; justify-content:center; margin:18px 0 12px;
+  #message {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    text-shadow: 0 0 4px #f0f, 0 0 8px #f0f;
   }
-  .timebox{
-    background:linear-gradient(180deg,rgba(255,255,255,0.85),rgba(255,255,255,0.75));
-    border-radius:12px; padding:12px 16px; min-width:84px; text-align:center; box-shadow:0 6px 18px rgba(0,0,0,0.07);
+
+  #countdown-container {
+    text-align: center;
+    margin-bottom: 2rem;
   }
-  .timebox .num{font-size:22px; font-weight:700; color:#222;}
-  .timebox .label{font-size:12px; color:#555;}
 
-  #gallery{display:none; margin-top:18px; gap:14px; display:grid; grid-template-columns:repeat(3,1fr); }
-
-  .card{
-    background:linear-gradient(180deg, white, #fffaf0);
-    border-radius:12px; padding:12px; text-align:center; cursor:pointer; transition:transform .18s ease, box-shadow .18s ease;
-    box-shadow:0 8px 20px rgba(0,0,0,0.06); display:flex; flex-direction:column; align-items:center; gap:10px;
+  #countdown {
+    font-size: 3rem;
+    font-weight: bold;
+    letter-spacing: 0.2em;
+    text-shadow: 2px 2px 4px black;
   }
-  .card:hover{ transform:translateY(-6px); box-shadow:0 18px 34px rgba(0,0,0,0.09); }
-  .card img{ width:120px; height:90px; object-fit:contain; border-radius:10px; }
-  .card .title{ font-weight:700; color:#4b2e83; }
 
-  .controls{ display:flex; gap:12px; justify-content:center; margin-top:18px; flex-wrap:wrap; }
-  button{
-    background:linear-gradient(90deg,var(--accent),#FF9A9E); color:white; border:0; padding:10px 14px; border-radius:10px; font-weight:700;
-    cursor:pointer; box-shadow:0 8px 20px rgba(255,107,107,0.16);
+  button {
+    background: #ff55cc;
+    border: none;
+    border-radius: 30px;
+    padding: 0.6rem 1.4rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin: 0.5rem;
+    color: white;
+    box-shadow: 0 0 12px #ff33aa;
+    transition: background-color 0.3s ease;
   }
-  button.secondary{ background:linear-gradient(90deg,#9AE6B4,#34D399); box-shadow:0 8px 20px rgba(52,211,153,0.14); }
-  button.ghost{ background:transparent; color:#4b2e83; border:2px dashed rgba(75,46,131,0.12);}
-  button:disabled{ opacity:0.5; cursor:not-allowed; transform:none; box-shadow:none;}
+  button:hover {
+    background: #e60099;
+  }
 
-  /* Modal */
-  .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.42); display:flex; align-items:center; justify-content:center; z-index:60; }
-  .modal{ width:min(640px,92%); background:white; padding:18px; border-radius:12px; box-shadow:0 30px 80px rgba(0,0,0,0.28); }
-  .modal h3{ margin:0 0 8px; font-family:'Fredoka One'; color:#4b2e83;}
-  .note{ width:100%; min-height:120px; border-radius:8px; border:1px solid #eee; padding:10px; resize:vertical; font-size:14px; }
-  .modal .row{ display:flex; gap:10px; margin-top:12px; justify-content:flex-end; }
+  .gallery {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
 
-  /* balloons */
-  .balloon{ position:absolute; width:48px; height:64px; border-radius:50% 50% 45% 45%; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; transform-origin:center; z-index:40; }
+  .gallery img {
+    width: 140px;
+    height: 140px;
+    border-radius: 15px;
+    object-fit: cover;
+    cursor: pointer;
+    box-shadow: 0 0 8px #ff66bb;
+    transition: transform 0.3s ease;
+  }
+  .gallery img:hover {
+    transform: scale(1.1);
+  }
 
-  /* confetti (subtle) */
-  canvas.confetti { position:absolute; inset:0; pointer-events:none; z-index:10; }
+  /* Tooltip container */
+  .tooltip {
+    position: relative;
+    display: inline-block;
+  }
+  /* Tooltip text */
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 110px;
+    background-color: #ff55cc;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 7px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%; 
+    left: 50%; 
+    margin-left: -55px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-weight: 700;
+  }
+  /* Show the tooltip text on hover */
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
 
-  /* footer */
-  footer{ margin-top:16px; text-align:center; color:#4b2e83; opacity:0.9; font-size:13px; }
+  /* Popup container */
+  #popup {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+  }
 
-  /* small responsive */
-  @media (max-width:720px){ .countdown{ gap:8px; } .timebox{ min-width:64px; padding:8px; } .card img{ width:100px; height:76px; } #gallery{ grid-template-columns:repeat(2,1fr);} }
+  #popup .popup-content {
+    background: white;
+    border-radius: 15px;
+    color: #222;
+    padding: 1.8rem 2.8rem;
+    max-width: 320px;
+    text-align: center;
+    box-shadow: 0 0 20px 5px #ff33aa;
+    font-family: 'Comic Neue', cursive, sans-serif;
+  }
+
+  #popup .popup-content p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  #popup button {
+    background: #ff55cc;
+    color: white;
+    font-size: 1rem;
+    padding: 0.6rem 1.6rem;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 10px #ff33aa;
+  }
+  #popup button:hover {
+    background: #e60099;
+  }
+
+  /* Balloon styling */
+  .balloon {
+    position: fixed;
+    bottom: -150px;
+    width: 50px;
+    height: 70px;
+    background: radial-gradient(circle at 30% 30%, #ff4455, #d2002f);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    box-shadow: inset -10px -15px 15px #ff7f7f;
+    animation: floatUp linear forwards;
+    z-index: 15;
+  }
+
+  .balloon.blue {
+    background: radial-gradient(circle at 30% 30%, #4a90e2, #1c4cc9);
+    box-shadow: inset -10px -15px 15px #7fb7ff;
+  }
+  .balloon.green {
+    background: radial-gradient(circle at 30% 30%, #4ade80, #15803d);
+    box-shadow: inset -10px -15px 15px #a4f4a7;
+  }
+  .balloon.yellow {
+    background: radial-gradient(circle at 30% 30%, #fbbf24, #b45309);
+    box-shadow: inset -10px -15px 15px #ffe680;
+  }
+
+  @keyframes floatUp {
+    0% {
+      bottom: -150px;
+      opacity: 1;
+      transform: translateX(0) rotate(0deg);
+    }
+    100% {
+      bottom: 110%;
+      opacity: 0;
+      transform: translateX(40px) rotate(360deg);
+    }
+  }
+
+  /* Container for control buttons */
+  #controls {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
 </style>
 </head>
 <body>
-<div class="page" role="main" aria-labelledby="pageTitle">
-  <header>
-    <div class="logo">PARTY 🎉</div>
-    <div>
-      <h1 id="pageTitle">Birthday Surprise — Tomorrow!</h1>
-      <p class="lead">Countdown to the big moment. When it hits zero, open each present to find where the gift is hidden!</p>
-    </div>
-  </header>
 
-  <section aria-label="Countdown area">
-    <div id="countdown" class="countdown" title="Countdown to tomorrow">
-      <div class="timebox"><div class="num" id="days">00</div><div class="label">Days</div></div>
-      <div class="timebox"><div class="num" id="hours">00</div><div class="label">Hours</div></div>
-      <div class="timebox"><div class="num" id="minutes">00</div><div class="label">Minutes</div></div>
-      <div class="timebox"><div class="num" id="seconds">00</div><div class="label">Seconds</div></div>
-    </div>
-    <div style="text-align:center; margin-top:10px;">
-      <small style="color:#4b2e83;opacity:0.85">Counting down to <strong id="targetDateLabel"></strong></small>
-    </div>
-  </section>
+<header>Happy Birthday, Musfir!</header>
+<div id="message">You make our life happy..</div>
 
-  <section id="gallery" aria-hidden="true" aria-label="Gift pictures">
-    <!-- 6 picture cards -->
-    <div class="card" data-index="0" tabindex="0"><img alt="Gift 1" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='160'><rect rx='12' width='100%' height='100%' fill='%23FFD93D'/><g transform='translate(40,20)'><rect width='160' height='100' rx='10' fill='%23ffffff' opacity='0.35'/><text x='80' y='60' font-family='Fredoka One' font-size='20' fill='%234b2e83' text-anchor='middle'>🎁 Gift 1</text></g></svg>"><div class="title">Gift Box 1</div></div>
-
-    <div class="card" data-index="1" tabindex="0"><img alt="Gift 2" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='160'><rect rx='12' width='100%' height='100%' fill='%23FF9A9E'/><g transform='translate(40,20)'><rect width='160' height='100' rx='10' fill='%23ffffff' opacity='0.35'/><text x='80' y='60' font-family='Fredoka One' font-size='20' fill='%234b2e83' text-anchor='middle'>🎈 Gift 2</text></g></svg>"><div class="title">Balloon Pack</div></div>
-
-    <div class="card" data-index="2" tabindex="0"><img alt="Gift 3" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='160'><rect rx='12' width='100%' height='100%' fill='%23A0C4FF'/><g transform='translate(40,20)'><rect width='160' height='100' rx='10' fill='%23ffffff' opacity='0.35'/><text x='80' y='60' font-family='Fredoka One' font-size='20' fill='%234b2e83' text-anchor='middle'>🍰 Gift 3</text></g></svg>"><div class="title">Cake Surprise</div></div>
-
-    <div class="card" data-index="3" tabindex="0"><img alt="Gift 4" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='160'><rect rx='12' width='100%' height='100%' fill='%23C2FFD8'/><g transform='translate(40,20)'><rect width='160' height='100' rx='10' fill='%23ffffff' opacity='0.35'/><text x='80' y='60' font-family='Fredoka One' font-size='20' fill='%234b2e83' text-anchor='middle'>🧸 Gift 4</text></g></svg>"><div class="title">Teddy</div></div>
-
-    <div class="card" data-index="4" tabindex="0"><img alt="Gift 5" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='160'><rect rx='12' width='100%' height='100%' fill='%23FFEE93'/><g transform='translate(40,20)'><rect width='160' height='100' rx='10' fill='%23ffffff' opacity='0.35'/><text x='80' y='60' font-family='Fredoka One' font-size='20' fill='%234b2e83' text-anchor='middle'>🧩 Gift 5</text></g></svg>"><div class="title">Puzzle</div></div>
-
-    <div class="card" data-index="5" tabindex="0"><img alt="Gift 6" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='160'><rect rx='12' width='100%' height='100%' fill='%23E0BBE4'/><g transform='translate(40,20)'><rect width='160' height='100' rx='10' fill='%23ffffff' opacity='0.35'/><text x='80' y='60' font-family='Fredoka One' font-size='20' fill='%234b2e83' text-anchor='middle'>🎮 Gift 6</text></g></svg>"><div class="title">Game</div></div>
-  </section>
-
-  <div class="controls" id="actionBar">
-    <button id="playMusicBtn">▶ Play Music</button>
-    <button id="balloonsBtn" class="secondary" style="display:none">🎈 Release Balloons</button>
-    <button id="stopBalloonsBtn" class="ghost" style="display:none">Stop Balloons</button>
-    <button id="resetBtn" class="ghost">Reset (clear notes & progress)</button>
-  </div>
-
-  <footer>
-    <small>Make edits to gift messages inside each popup. When all gifts are collected, the balloon button will appear. Have a great party! 🎉</small>
-  </footer>
+<div id="countdown-container">
+  <div id="countdown">Loading...</div>
+  <button id="startCountdownBtn">Start Countdown</button>
 </div>
 
-<!-- modal container -->
-<div id="modalContainer" style="display:none;"></div>
+<div class="gallery" id="gallery">
+  <div class="tooltip">
+    <img src="https://picsum.photos/id/1011/140/140" alt="Gift 1" data-index="0" />
+    <span class="tooltiptext">Click to get gift</span>
+  </div>
+  <div class="tooltip">
+    <img src="https://picsum.photos/id/1025/140/140" alt="Gift 2" data-index="1" />
+    <span class="tooltiptext">Click to get gift</span>
+  </div>
+  <div class="tooltip">
+    <img src="https://picsum.photos/id/106/140/140" alt="Gift 3" data-index="2" />
+    <span class="tooltiptext">Click to get gift</span>
+  </div>
+  <div class="tooltip">
+    <img src="https://picsum.photos/id/1084/140/140" alt="Gift 4" data-index="3" />
+    <span class="tooltiptext">Click to get gift</span>
+  </div>
+  <div class="tooltip">
+    <img src="https://picsum.photos/id/1081/140/140" alt="Gift 5" data-index="4" />
+    <span class="tooltiptext">Click to get gift</span>
+  </div>
+  <div class="tooltip">
+    <img src="https://picsum.photos/id/1035/140/140" alt="Gift 6" data-index="5" />
+    <span class="tooltiptext">Click to get gift</span>
+  </div>
+</div>
 
-<!-- Canvas for confetti (subtle) -->
-<canvas class="confetti" id="confettiCanvas"></canvas>
+<div id="popup">
+  <div class="popup-content">
+    <p id="popup-text"></p>
+    <button id="popup-ok-btn">OK</button>
+  </div>
+</div>
+
+<div id="controls" style="display:none;">
+  <button id="startBalloons">Start Balloons</button>
+  <button id="stopBalloons">Stop Balloons</button>
+  <button id="playMusic">Play Music</button>
+</div>
+
+<audio id="birthday-music" src="https://www.bensound.com/bensound-music/bensound-happyrock.mp3" preload="auto"></audio>
 
 <script>
-/* ======================
-   Config + target time
-   ====================== */
-// Determine "tomorrow" local midnight as the countdown target.
-const now = new Date();
-const tomorrow = new Date(now);
-tomorrow.setDate(now.getDate() + 1);
-tomorrow.setHours(0,0,0,0); // midnight start of tomorrow
-const TARGET = tomorrow; // you can edit this date/time if you want
-document.getElementById('targetDateLabel').textContent = TARGET.toLocaleString();
+  // Countdown: set to 10 seconds for demo purposes (you can set longer)
+  const countdownSeconds = 10;
+  let countdownInterval = null;
+  let timeLeft = countdownSeconds;
 
-/* ==============
-   Countdown
-   ============== */
-const els = {
-  days: document.getElementById('days'),
-  hours: document.getElementById('hours'),
-  minutes: document.getElementById('minutes'),
-  seconds: document.getElementById('seconds'),
-  gallery: document.getElementById('gallery'),
-  actionBar: document.getElementById('actionBar'),
-  playMusicBtn: document.getElementById('playMusicBtn'),
-  balloonsBtn: document.getElementById('balloonsBtn'),
-  stopBalloonsBtn: document.getElementById('stopBalloonsBtn'),
-  resetBtn: document.getElementById('resetBtn'),
-  modalContainer: document.getElementById('modalContainer'),
-};
+  const countdownEl = document.getElementById('countdown');
+  const startBtn = document.getElementById('startCountdownBtn');
+  const messageEl = document.getElementById('message');
+  const gallery = document.getElementById('gallery');
+  const popup = document.getElementById('popup');
+  const popupText = document.getElementById('popup-text');
+  const popupOk = document.getElementById('popup-ok-btn');
+  const controls = document.getElementById('controls');
+  const music = document.getElementById('birthday-music');
 
-let countdownInterval = null;
-function updateCountdown(){
-  const now = new Date();
-  let diff = Math.max(0, TARGET - now);
-  const days = Math.floor(diff / (1000*60*60*24));
-  diff -= days * (1000*60*60*24);
-  const hours = Math.floor(diff / (1000*60*60));
-  diff -= hours * (1000*60*60);
-  const minutes = Math.floor(diff / (1000*60));
-  diff -= minutes * (1000*60);
-  const seconds = Math.floor(diff / 1000);
-  els.days.textContent = String(days).padStart(2,'0');
-  els.hours.textContent = String(hours).padStart(2,'0');
-  els.minutes.textContent = String(minutes).padStart(2,'0');
-  els.seconds.textContent = String(seconds).padStart(2,'0');
+  // Gift notes for each picture
+  const giftNotes = [
+    "Gift 1: In the pink box under the sofa.",
+    "Gift 2: Hidden inside the blue drawer in the study.",
+    "Gift 3: Behind the curtains in the living room.",
+    "Gift 4: Inside the fridge on the top shelf.",
+    "Gift 5: Under the bed in your room.",
+    "Gift 6: In the garden near the big tree."
+  ];
 
-  if (TARGET - now <= 0){
-    clearInterval(countdownInterval);
-    showGallery();
+  // Track collected gifts
+  const collectedGifts = new Set();
+
+  // Show countdown
+  function updateCountdown() {
+    countdownEl.textContent = `00:${timeLeft < 10 ? '0' : ''}${timeLeft}`;
+    if (timeLeft === 0) {
+      clearInterval(countdownInterval);
+      countdownEnded();
+    } else {
+      timeLeft--;
+    }
   }
-}
-countdownInterval = setInterval(updateCountdown, 250);
-updateCountdown();
 
-/* ================
-   Gallery & modal
-   ================ */
-const totalGifts = 6;
-let collected = JSON.parse(localStorage.getItem('collected_v1') || '[]'); // array of indices collected
-let notes = JSON.parse(localStorage.getItem('notes_v1') || '[]'); // array of note strings
-if (!Array.isArray(notes) || notes.length < totalGifts){ notes = new Array(totalGifts).fill(''); }
+  function countdownEnded() {
+    countdownEl.style.display = 'none';
+    startBtn.style.display = 'none';
+    messageEl.textContent = "Happy Birthday, Musfir! 🎉 You make our life happy!";
+  }
 
-const cards = Array.from(document.querySelectorAll('.card'));
-cards.forEach(card=>{
-  card.addEventListener('click', ()=> openGiftModal(parseInt(card.dataset.index,10)));
-  card.addEventListener('keypress', (e)=>{ if(e.key==='Enter') openGiftModal(parseInt(card.dataset.index,10)); });
-});
-
-function showGallery(){
-  els.gallery.style.display = 'grid';
-  els.gallery.removeAttribute('aria-hidden');
-  refreshCardStates();
-}
-
-function refreshCardStates(){
-  cards.forEach((card,i)=>{
-    card.style.opacity = collected.includes(i) ? '0.5' : '1';
-    card.style.filter = collected.includes(i) ? 'grayscale(10%)' : 'none';
-    card.querySelector('.title').textContent = card.querySelector('.title').textContent.split(' • ')[0] + (collected.includes(i) ? ' • Collected' : '');
-  });
-  checkAllCollected();
-}
-
-function openGiftModal(index){
-  // Create modal HTML
-  const existing = document.getElementById('modal-'+index);
-  if (existing) return; // modal already open
-
-  const modalBackdrop = document.createElement('div');
-  modalBackdrop.className = 'modal-backdrop';
-  modalBackdrop.id = 'modal-'+index;
-  modalBackdrop.innerHTML = `
-    <div class="modal" role="dialog" aria-modal="true" aria-label="Gift ${index+1} note">
-      <h3>Gift ${index+1} — Add your note</h3>
-      <p style="margin:6px 0 8px;color:#555">Write a short note to tell where the gift can be found. Example: "Under the big red couch."</p>
-      <textarea class="note" id="note-${index}">${escapeHtml(notes[index]||'')}</textarea>
-      <div class="row">
-        <button id="save-${index}">Save</button>
-        <button id="ok-${index}">${collected.includes(index) ? 'OK (already collected)' : 'OK'}</button>
-      </div>
-    </div>
-  `;
-  modalBackdrop.addEventListener('click', (e)=>{ if (e.target === modalBackdrop) closeModal(index); });
-  els.modalContainer.appendChild(modalBackdrop);
-  modalBackdrop.style.display = 'flex';
-
-  // Button handlers
-  document.getElementById('save-'+index).addEventListener('click', ()=>{
-    const val = document.getElementById('note-'+index).value.trim();
-    notes[index] = val;
-    localStorage.setItem('notes_v1', JSON.stringify(notes));
-    flashSaved(document.getElementById('save-'+index));
+  startBtn.addEventListener('click', () => {
+    timeLeft = countdownSeconds;
+    countdownEl.style.display = 'block';
+    startBtn.style.display = 'none';
+    updateCountdown();
+    countdownInterval = setInterval(updateCountdown, 1000);
   });
 
-  document.getElementById('ok-'+index).addEventListener('click', ()=>{
-    // Save note before closing
-    const val = document.getElementById('note-'+index).value.trim();
-    notes[index] = val;
-    localStorage.setItem('notes_v1', JSON.stringify(notes));
-
-    // Mark collected
-    if (!collected.includes(index)) collected.push(index);
-    localStorage.setItem('collected_v1', JSON.stringify(collected));
-    closeModal(index);
-    refreshCardStates();
-    // Optionally show the note briefly as alert (or you can read it from storage)
-    if (notes[index]) setTimeout(()=> alert('Note for gift '+(index+1)+':\\n\\n' + notes[index]), 80);
+  // Handle photo clicks to show popup
+  gallery.addEventListener('click', e => {
+    if (e.target.tagName === 'IMG') {
+      const idx = e.target.getAttribute('data-index');
+      popupText.textContent = giftNotes[idx];
+      popup.style.display = 'flex';
+      collectedGifts.add(Number(idx));
+      // Disable tooltip on collected gift picture
+      e.target.parentNode.querySelector('.tooltiptext').textContent = '';
+      checkAllGiftsCollected();
+    }
   });
-}
 
-function closeModal(index){
-  const node = document.getElementById('modal-'+index);
-  if (node){ node.remove(); }
-}
+  // Close popup on OK
+  popupOk.addEventListener('click', () => {
+    popup.style.display = 'none';
+  });
 
-function flashSaved(button){
-  const orig = button.textContent;
-  button.textContent = 'Saved ✓';
-  setTimeout(()=> button.textContent = orig, 900);
-}
-
-/* ====================
-   Check all & show balloons/music
-   ==================== */
-function checkAllCollected(){
-  if (collected.length >= totalGifts && new Set(collected).size >= totalGifts){
-    // show balloon controls
-    els.balloonsBtn.style.display = 'inline-block';
-    els.stopBalloonsBtn.style.display = 'inline-block';
-  } else {
-    els.balloonsBtn.style.display = 'none';
-    els.stopBalloonsBtn.style.display = 'none';
+  // Check if all gifts collected
+  function checkAllGiftsCollected() {
+    if (collectedGifts.size === giftNotes.length) {
+      controls.style.display = 'block';
+    }
   }
-}
 
-/* ====================
-   Balloons animation
-   ==================== */
-let balloonsInterval = null;
-let activeBalloons = [];
-const maxBalloons = 28;
-function startBalloons(){
-  if (balloonsInterval) return;
-  const container = document.body;
-  balloonsInterval = setInterval(()=> {
-    if (activeBalloons.length >= maxBalloons) return;
-    const b = document.createElement('div');
-    b.className = 'balloon';
-    const left = Math.random()*90 + '%';
-    const size = 36 + Math.random()*36;
-    b.style.left = left;
-    b.style.bottom = '-120px';
-    b.style.width = size+'px';
-    b.style.height = (size*1.35)+'px';
-    const hue = Math.floor(Math.random()*360);
-    b.style.background = `linear-gradient(180deg,hsl(${hue}deg 90% 60%) , hsl(${(hue+30)%360}deg 80% 45%))`;
-    b.style.opacity = 0.95;
-    b.style.transform = 'translateY(0) rotate(' + (Math.random()*30-15) + 'deg)';
-    // string
-    const string = document.createElement('div');
-    string.style.position='absolute'; string.style.bottom='-20px'; string.style.left='50%'; string.style.width='2px'; string.style.height='36px';
-    string.style.background='rgba(0,0,0,0.08)'; string.style.transform='translateX(-50%)';
-    b.appendChild(string);
-    container.appendChild(b);
-    activeBalloons.push(b);
+  // Balloon animation logic
+  let balloonTimer = null;
 
-    // animate
-    const rise = 7000 + Math.random()*12000;
-    b.animate([
-      { transform: `translateY(0) rotate(${Math.random()*30-15}deg)`, opacity:1 },
-      { transform: `translateY(-${window.innerHeight + 200}px) rotate(${Math.random()*60-30}deg)`, opacity:1 }
-    ], { duration: rise, easing:'linear' });
+  function createBalloon() {
+    const balloon = document.createElement('div');
+    balloon.classList.add('balloon');
+    const colors = ['blue', 'green', 'yellow'];
+    balloon.classList.add(colors[Math.floor(Math.random() * colors.length)]);
+    balloon.style.left = Math.random() * 100 + 'vw';
+    balloon.style.animationDuration = (5 + Math.random() * 5) + 's';
 
-    // remove after animation
-    setTimeout(()=>{
-      try{ b.remove(); }catch(e){}
-      activeBalloons = activeBalloons.filter(x=>x!==b);
-    }, rise + 600);
-  }, 350);
-}
+    document.body.appendChild(balloon);
 
-function stopBalloons(){
-  if (balloonsInterval){ clearInterval(balloonsInterval); balloonsInterval = null; }
-  // clear existing
-  activeBalloons.forEach(b=>b.remove());
-  activeBalloons = [];
-}
-
-/* ====================
-   Play Happy Birthday using WebAudio
-   ==================== */
-let audioCtx = null;
-let musicOsc = null;
-let musicGain = null;
-let musicPlaying = false;
-const melody = [
-  // relative notes (Hz) mapping based on A4=440; we'll map to simple frequencies for the melody
-  // Sequence of [freq, duration(ms)]
-  [392, 400], [392,200], [440,600], [392,600], [523,600], [494,1200],
-  [392,400], [392,200], [440,600], [392,600], [587,600], [523,1200],
-  [392,400], [392,200], [784,600], [659,600], [523,600], [494,600], [440,1200],
-  [698,400], [698,200], [659,600], [523,600], [587,600], [523,1200]
-];
-
-function startMusic(){
-  if (musicPlaying) return;
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  musicGain = audioCtx.createGain();
-  musicGain.gain.value = 0.12;
-  musicGain.connect(audioCtx.destination);
-  musicPlaying = true;
-  playSequence(0);
-  document.getElementById('playMusicBtn').textContent = '⏸ Stop Music';
-}
-
-function stopMusic(){
-  musicPlaying = false;
-  if (audioCtx) {
-    // fade out then close
-    musicGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
-    setTimeout(()=> {
-      try{ audioCtx.close(); }catch(e){}
-      audioCtx = null; musicOsc = null; musicGain = null;
-    }, 600);
-  }
-  document.getElementById('playMusicBtn').textContent = '▶ Play Music';
-}
-
-function playSequence(pos){
-  if (!musicPlaying || !audioCtx) return;
-  const [freq, dur] = melody[pos % melody.length];
-  const osc = audioCtx.createOscillator();
-  osc.type = 'sine';
-  osc.frequency.value = freq;
-  const g = audioCtx.createGain();
-  g.gain.setValueAtTime(0.001, audioCtx.currentTime);
-  g.gain.exponentialRampToValueAtTime(1.0, audioCtx.currentTime + 0.02);
-  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur/1000 - 0.02);
-  osc.connect(g); g.connect(musicGain);
-  osc.start();
-  osc.stop(audioCtx.currentTime + dur/1000);
-  osc.onended = ()=> {
-    if (!musicPlaying) return;
-    setTimeout(()=> playSequence(pos+1), 60);
-  };
-}
-
-/* ====================
-   Confetti (subtle)
-   ==================== */
-const confettiCanvas = document.getElementById('confettiCanvas');
-confettiCanvas.width = window.innerWidth;
-confettiCanvas.height = window.innerHeight;
-const ctx = confettiCanvas.getContext('2d');
-let confettiPieces = [];
-function spawnConfetti(){
-  confettiPieces = [];
-  for(let i=0;i<40;i++){
-    confettiPieces.push({
-      x: Math.random()*confettiCanvas.width,
-      y: Math.random()*confettiCanvas.height,
-      r: 6 + Math.random()*8,
-      d: Math.random()*40 + 10,
-      color: `hsl(${Math.floor(Math.random()*360)} 90% 60%)`,
-      tilt: Math.random()*10-5,
-      tiltSpeed: Math.random()*0.1+0.02,
-      vy: 0.5 + Math.random()*1.2
+    balloon.addEventListener('animationend', () => {
+      balloon.remove();
     });
   }
-}
-function updateConfetti(){
-  ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
-  confettiPieces.forEach(p=>{
-    p.y += p.vy;
-    p.x += Math.sin(p.y / 30) * 1.5;
-    p.tilt += p.tiltSpeed;
-    ctx.save();
+
+  function startBalloons() {
+    if (!balloonTimer) {
+      balloonTimer = setInterval(createBalloon, 300);
+    }
+  }
+
+  function stopBalloons() {
+    clearInterval(balloonTimer);
+    balloonTimer = null;
+    document.querySelectorAll('.balloon').forEach(b => b.remove());
+  }
+
+  document.getElementById('startBalloons').addEventListener('click', startBalloons);
+  document.getElementById('stopBalloons').addEventListener('click', stopBalloons);
+
+  // Play music button
+  document.getElementById('playMusic').addEventListener('click', () => {
+    if (music.paused) {
+      music.play();
+    } else {
+      music.pause();
+    }
+  });
+
+  // Initial message load
+  messageEl.textContent = "You make our life happy..";
+  countdownEl.textContent = "Press 'Start Countdown'";
+</script>
+
+</body>
+</html>
