@@ -292,32 +292,41 @@
 
   const collectedGifts = new Set();
 
-  // Function to get current time in Europe/London timezone and time difference
+  // Get current EMEA time (Europe/London)
   function getEMEATime() {
-    // Using Intl API to get Europe/London time offset and current date/time adjusted
-    const date = new Date();
-    const options = { timeZone: 'Europe/London', hour12: false };
-    const londonTimeStr = date.toLocaleString('en-GB', {...options, year: 'numeric', month:'2-digit', day:'2-digit', hour: '2-digit', minute:'2-digit', second:'2-digit'});
-    // Parse string to Date object
-    const [day, month, year, hour, minute, second] = londonTimeStr.match(/d+/g);
-    return new Date(year, month - 1, day, hour, minute, second);
+    const now = new Date();
+    const timeZone = 'Europe/London';
+    const options = { timeZone, hour12: false };
+    const formatter = new Intl.DateTimeFormat('en-GB', {
+      ...options,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+    const parts = formatter.formatToParts(now);
+    const year = parts.find(p => p.type === 'year').value;
+    const month = parts.find(p => p.type === 'month').value;
+    const day = parts.find(p => p.type === 'day').value;
+    const hour = parts.find(p => p.type === 'hour').value;
+    const minute = parts.find(p => p.type === 'minute').value;
+    const second = parts.find(p => p.type === 'second').value;
+    return new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`);
   }
 
-  // Calculate time in ms until midnight tonight EMEA
-  function msUntilEMEAMidnight() {
+  // Get milliseconds left until midnight Oct 27, 2025 Europe/London
+  function msUntilEMEASpecificDate() {
     const now = getEMEATime();
-    const tomorrowMidnight = new Date(now);
-    tomorrowMidnight.setDate(now.getDate() + 1);
-    tomorrowMidnight.setHours(0,0,0,0);
-
-    return tomorrowMidnight.getTime() - now.getTime();
+    // Note month for Date is 0-based, so 9=October
+    const targetDate = new Date(2025, 9, 27, 0, 0, 0);
+    return targetDate.getTime() - now.getTime();
   }
 
-  // Update countdown every second
-  let countdownInterval = null;
-
+  // Update countdown display every second
   function updateCountdown() {
-    const msLeft = msUntilEMEAMidnight();
+    const msLeft = msUntilEMEASpecificDate();
 
     if (msLeft <= 0) {
       clearInterval(countdownInterval);
@@ -345,11 +354,11 @@
     musicWaitContainer.style.display = 'none';
   }
 
-  // Start countdown right away
-  countdownInterval = setInterval(updateCountdown, 1000);
-  updateCountdown();
+  // Start countdown interval
+  let countdownInterval = setInterval(updateCountdown, 1000);
+  updateCountdown(); // Immediately update once
 
-  // Handle picture clicks popup
+  // Picture click event for gift popups
   gallery.addEventListener('click', e => {
     if (e.target.tagName === 'IMG') {
       const idx = e.target.getAttribute('data-index');
@@ -365,7 +374,7 @@
     popup.style.display = 'none';
   });
 
-  // Balloon animation logic
+  // Balloon animation
   let balloonTimer = null;
 
   function createBalloon() {
@@ -395,7 +404,7 @@
   document.getElementById('startBalloons').addEventListener('click', startBalloons);
   document.getElementById('stopBalloons').addEventListener('click', stopBalloons);
 
-  // Play music toggle buttons
+  // Play music buttons toggle
   function toggleMusic() {
     if (music.paused) {
       music.play();
@@ -404,13 +413,7 @@
     }
   }
   document.getElementById('playMusic').addEventListener('click', toggleMusic);
-  musicWaitBtn.addEventListener('click', () => {
-    if (music.paused) {
-      music.play();
-    } else {
-      music.pause();
-    }
-  });
+  musicWaitBtn.addEventListener('click', toggleMusic);
 </script>
 
 </body>
