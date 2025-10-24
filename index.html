@@ -9,9 +9,9 @@
 
   body {
     margin: 0; padding: 0;
-    background: linear-gradient(135deg, #ff70a6, #a159e6);
+    background: linear-gradient(135deg, #0047ab, #0073e6);
     font-family: 'Comic Neue', cursive, sans-serif;
-    color: #fff;
+    color: #e0f0ff;
     overflow-x: hidden;
   }
 
@@ -19,31 +19,32 @@
     text-align: center;
     padding: 2rem 1rem 1rem;
     font-size: 3rem;
-    text-shadow: 0 0 5px #ff00aa, 0 0 10px #ff0088;
+    text-shadow: 0 0 8px #0099ff, 0 0 15px #00ccff;
   }
 
   #message {
     text-align: center;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
     font-weight: 600;
-    text-shadow: 0 0 4px #f0f, 0 0 8px #f0f;
+    text-shadow: 0 0 6px #00cfff, 0 0 12px #00e5ff;
+    display: none;
   }
 
   #countdown-container {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
   }
 
   #countdown {
     font-size: 3rem;
     font-weight: bold;
     letter-spacing: 0.2em;
-    text-shadow: 2px 2px 4px black;
+    text-shadow: 2px 2px 6px #003366;
   }
 
   button {
-    background: #ff55cc;
+    background: #0099ff;
     border: none;
     border-radius: 30px;
     padding: 0.6rem 1.4rem;
@@ -51,11 +52,11 @@
     cursor: pointer;
     margin: 0.5rem;
     color: white;
-    box-shadow: 0 0 12px #ff33aa;
+    box-shadow: 0 0 12px #00b3ff;
     transition: background-color 0.3s ease;
   }
   button:hover {
-    background: #e60099;
+    background: #007acc;
   }
 
   .gallery {
@@ -64,6 +65,7 @@
     gap: 1rem;
     flex-wrap: wrap;
     margin-bottom: 2rem;
+    display: none; /* hidden initially */
   }
 
   .gallery img {
@@ -72,7 +74,7 @@
     border-radius: 15px;
     object-fit: cover;
     cursor: pointer;
-    box-shadow: 0 0 8px #ff66bb;
+    box-shadow: 0 0 8px #00bfff;
     transition: transform 0.3s ease;
   }
   .gallery img:hover {
@@ -88,7 +90,7 @@
   .tooltip .tooltiptext {
     visibility: hidden;
     width: 110px;
-    background-color: #ff55cc;
+    background-color: #0099ff;
     color: #fff;
     text-align: center;
     border-radius: 6px;
@@ -112,7 +114,7 @@
   #popup {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(0,0,0,0.85);
     display: none;
     justify-content: center;
     align-items: center;
@@ -120,13 +122,13 @@
   }
 
   #popup .popup-content {
-    background: white;
+    background: #002f6c;
     border-radius: 15px;
-    color: #222;
+    color: #cce6ff;
     padding: 1.8rem 2.8rem;
     max-width: 320px;
     text-align: center;
-    box-shadow: 0 0 20px 5px #ff33aa;
+    box-shadow: 0 0 25px 5px #0099ff;
     font-family: 'Comic Neue', cursive, sans-serif;
   }
 
@@ -136,17 +138,17 @@
   }
 
   #popup button {
-    background: #ff55cc;
+    background: #0099ff;
     color: white;
     font-size: 1rem;
     padding: 0.6rem 1.6rem;
     border-radius: 30px;
     border: none;
     cursor: pointer;
-    box-shadow: 0 0 10px #ff33aa;
+    box-shadow: 0 0 14px #00b3ff;
   }
   #popup button:hover {
-    background: #e60099;
+    background: #007acc;
   }
 
   /* Balloon styling */
@@ -155,24 +157,24 @@
     bottom: -150px;
     width: 50px;
     height: 70px;
-    background: radial-gradient(circle at 30% 30%, #ff4455, #d2002f);
+    background: radial-gradient(circle at 30% 30%, #00aaff, #0066cc);
     border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    box-shadow: inset -10px -15px 15px #ff7f7f;
+    box-shadow: inset -10px -15px 15px #3399ff;
     animation: floatUp linear forwards;
     z-index: 15;
   }
 
   .balloon.blue {
-    background: radial-gradient(circle at 30% 30%, #4a90e2, #1c4cc9);
-    box-shadow: inset -10px -15px 15px #7fb7ff;
+    background: radial-gradient(circle at 30% 30%, #3399ff, #003399);
+    box-shadow: inset -10px -15px 15px #66b3ff;
   }
   .balloon.green {
-    background: radial-gradient(circle at 30% 30%, #4ade80, #15803d);
-    box-shadow: inset -10px -15px 15px #a4f4a7;
+    background: radial-gradient(circle at 30% 30%, #33cc99, #026644);
+    box-shadow: inset -10px -15px 15px #66ffbb;
   }
   .balloon.yellow {
-    background: radial-gradient(circle at 30% 30%, #fbbf24, #b45309);
-    box-shadow: inset -10px -15px 15px #ffe680;
+    background: radial-gradient(circle at 30% 30%, #66ccff, #005580);
+    box-shadow: inset -10px -15px 15px #99e6ff;
   }
 
   @keyframes floatUp {
@@ -192,6 +194,22 @@
   #controls {
     text-align: center;
     margin-bottom: 3rem;
+    display: none; /* hidden initially */
+  }
+
+  /* Additional play music button below countdown */
+  #music-wait {
+    text-align: center;
+    margin-bottom: 2rem;
+    display: none; /* hidden initially */
+  }
+
+  #music-wait button {
+    background: #0066cc;
+    box-shadow: 0 0 10px #004a99;
+  }
+  #music-wait button:hover {
+    background: #004a99;
   }
 </style>
 </head>
@@ -201,8 +219,11 @@
 <div id="message">You make our life happy..</div>
 
 <div id="countdown-container">
-  <div id="countdown">Loading...</div>
-  <button id="startCountdownBtn">Start Countdown</button>
+  <div id="countdown">Loading countdown...</div>
+</div>
+
+<div id="music-wait">
+  <button id="playMusicWait">Wait till your birthday music</button>
 </div>
 
 <div class="gallery" id="gallery">
@@ -239,7 +260,7 @@
   </div>
 </div>
 
-<div id="controls" style="display:none;">
+<div id="controls">
   <button id="startBalloons">Start Balloons</button>
   <button id="stopBalloons">Stop Balloons</button>
   <button id="playMusic">Play Music</button>
@@ -248,13 +269,7 @@
 <audio id="birthday-music" src="https://www.bensound.com/bensound-music/bensound-happyrock.mp3" preload="auto"></audio>
 
 <script>
-  // Countdown: set to 10 seconds for demo purposes (you can set longer)
-  const countdownSeconds = 10;
-  let countdownInterval = null;
-  let timeLeft = countdownSeconds;
-
   const countdownEl = document.getElementById('countdown');
-  const startBtn = document.getElementById('startCountdownBtn');
   const messageEl = document.getElementById('message');
   const gallery = document.getElementById('gallery');
   const popup = document.getElementById('popup');
@@ -262,6 +277,8 @@
   const popupOk = document.getElementById('popup-ok-btn');
   const controls = document.getElementById('controls');
   const music = document.getElementById('birthday-music');
+  const musicWaitBtn = document.getElementById('playMusicWait');
+  const musicWaitContainer = document.getElementById('music-wait');
 
   // Gift notes for each picture
   const giftNotes = [
@@ -273,58 +290,80 @@
     "Gift 6: In the garden near the big tree."
   ];
 
-  // Track collected gifts
   const collectedGifts = new Set();
 
-  // Show countdown
+  // Function to get current time in Europe/London timezone and time difference
+  function getEMEATime() {
+    // Using Intl API to get Europe/London time offset and current date/time adjusted
+    const date = new Date();
+    const options = { timeZone: 'Europe/London', hour12: false };
+    const londonTimeStr = date.toLocaleString('en-GB', {...options, year: 'numeric', month:'2-digit', day:'2-digit', hour: '2-digit', minute:'2-digit', second:'2-digit'});
+    // Parse string to Date object
+    const [day, month, year, hour, minute, second] = londonTimeStr.match(/d+/g);
+    return new Date(year, month - 1, day, hour, minute, second);
+  }
+
+  // Calculate time in ms until midnight tonight EMEA
+  function msUntilEMEAMidnight() {
+    const now = getEMEATime();
+    const tomorrowMidnight = new Date(now);
+    tomorrowMidnight.setDate(now.getDate() + 1);
+    tomorrowMidnight.setHours(0,0,0,0);
+
+    return tomorrowMidnight.getTime() - now.getTime();
+  }
+
+  // Update countdown every second
+  let countdownInterval = null;
+
   function updateCountdown() {
-    countdownEl.textContent = `00:${timeLeft < 10 ? '0' : ''}${timeLeft}`;
-    if (timeLeft === 0) {
+    const msLeft = msUntilEMEAMidnight();
+
+    if (msLeft <= 0) {
       clearInterval(countdownInterval);
-      countdownEnded();
-    } else {
-      timeLeft--;
+      countdownEndActions();
+      return;
     }
+
+    let secondsLeft = Math.floor(msLeft / 1000);
+    const hours = Math.floor(secondsLeft / 3600);
+    secondsLeft %= 3600;
+    const minutes = Math.floor(secondsLeft / 60);
+    const seconds = secondsLeft % 60;
+
+    countdownEl.textContent = 
+      (hours < 10 ? '0' + hours : hours) + ':' +
+      (minutes < 10 ? '0' + minutes : minutes) + ':' +
+      (seconds < 10 ? '0' + seconds : seconds);
   }
 
-  function countdownEnded() {
+  function countdownEndActions() {
     countdownEl.style.display = 'none';
-    startBtn.style.display = 'none';
-    messageEl.textContent = "Happy Birthday, Musfir! 🎉 You make our life happy!";
+    messageEl.style.display = 'block';
+    gallery.style.display = 'flex';
+    controls.style.display = 'block';
+    musicWaitContainer.style.display = 'none';
   }
 
-  startBtn.addEventListener('click', () => {
-    timeLeft = countdownSeconds;
-    countdownEl.style.display = 'block';
-    startBtn.style.display = 'none';
-    updateCountdown();
-    countdownInterval = setInterval(updateCountdown, 1000);
-  });
+  // Start countdown right away
+  countdownInterval = setInterval(updateCountdown, 1000);
+  updateCountdown();
 
-  // Handle photo clicks to show popup
+  // Handle picture clicks popup
   gallery.addEventListener('click', e => {
     if (e.target.tagName === 'IMG') {
       const idx = e.target.getAttribute('data-index');
       popupText.textContent = giftNotes[idx];
       popup.style.display = 'flex';
       collectedGifts.add(Number(idx));
-      // Disable tooltip on collected gift picture
       e.target.parentNode.querySelector('.tooltiptext').textContent = '';
-      checkAllGiftsCollected();
+      if (collectedGifts.size === giftNotes.length) controls.style.display = 'block';
     }
   });
 
-  // Close popup on OK
   popupOk.addEventListener('click', () => {
     popup.style.display = 'none';
   });
-
-  // Check if all gifts collected
-  function checkAllGiftsCollected() {
-    if (collectedGifts.size === giftNotes.length) {
-      controls.style.display = 'block';
-    }
-  }
 
   // Balloon animation logic
   let balloonTimer = null;
@@ -345,11 +384,8 @@
   }
 
   function startBalloons() {
-    if (!balloonTimer) {
-      balloonTimer = setInterval(createBalloon, 300);
-    }
+    if (!balloonTimer) balloonTimer = setInterval(createBalloon, 300);
   }
-
   function stopBalloons() {
     clearInterval(balloonTimer);
     balloonTimer = null;
@@ -359,18 +395,22 @@
   document.getElementById('startBalloons').addEventListener('click', startBalloons);
   document.getElementById('stopBalloons').addEventListener('click', stopBalloons);
 
-  // Play music button
-  document.getElementById('playMusic').addEventListener('click', () => {
+  // Play music toggle buttons
+  function toggleMusic() {
+    if (music.paused) {
+      music.play();
+    } else {
+      music.pause();
+    }
+  }
+  document.getElementById('playMusic').addEventListener('click', toggleMusic);
+  musicWaitBtn.addEventListener('click', () => {
     if (music.paused) {
       music.play();
     } else {
       music.pause();
     }
   });
-
-  // Initial message load
-  messageEl.textContent = "You make our life happy..";
-  countdownEl.textContent = "Press 'Start Countdown'";
 </script>
 
 </body>
