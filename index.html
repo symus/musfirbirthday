@@ -101,9 +101,9 @@ body{
 .controls{display:none;gap:10px;justify-content:center;margin:20px}
 
 /* Balloons */
-.balloon{
+.balloon {
   position: fixed;
-  bottom: -100px; 
+  bottom: -100px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -112,19 +112,16 @@ body{
   font-weight: bold;
   z-index: 1000;
   pointer-events: none;
-  animation-name: floatUp, sway;
-  animation-timing-function: linear, ease-in-out;
-  animation-iteration-count: 1, infinite;
-  animation-fill-mode: forwards, none;
+  animation: floatUp linear forwards, sway 2s ease-in-out infinite alternate;
 }
-@keyframes floatUp{
-  0%{transform: translateY(0) rotate(0deg);}
-  100%{transform: translateY(-120vh) rotate(360deg);}
+@keyframes floatUp {
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(-120vh) rotate(360deg); }
 }
-@keyframes sway{
-  0%{transform: translateX(0);}
-  50%{transform: translateX(15px);}
-  100%{transform: translateX(-15px);}
+@keyframes sway {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(15px); }
+  100% { transform: translateX(-15px); }
 }
 </style>
 </head>
@@ -212,7 +209,7 @@ function updateTimer(){
 const timerHandle = setInterval(updateTimer,1000);
 updateTimer();
 
-// Music (simple synth)
+// Music
 let audioCtx = null;
 let isPlaying=false;
 function startMusic(){
@@ -258,36 +255,26 @@ function releaseBalloons() {
   balloonInterval = setInterval(() => {
     const b = document.createElement('div');
     b.className = 'balloon';
-
     const size = 30 + Math.random() * 40;
     b.style.width = size + 'px';
     b.style.height = size*1.4 + 'px';
-    b.style.left = Math.random() * 90 + 'vw';
+    b.style.left = Math.random()*90 + 'vw';
     b.style.backgroundColor = `hsl(${Math.random()*360},70%,60%)`;
-    const duration = 6 + Math.random() * 4;
-    b.style.animationDuration = `${duration}s, 2s`;
-
+    const floatDuration = 6 + Math.random()*4; // 6-10s
+    b.style.animation = `floatUp ${floatDuration}s linear forwards, sway 2s ease-in-out infinite alternate`;
     document.body.appendChild(b);
-
-    b.addEventListener('animationend', e => {
-      if(e.animationName==='floatUp') b.remove();
-    });
+    setTimeout(() => b.remove(), floatDuration*1000);
   }, 300);
 }
-
-function stopBalloons() {
-  clearInterval(balloonInterval);
-  balloonInterval = null;
-}
-
+function stopBalloons() { clearInterval(balloonInterval); balloonInterval=null; }
 balloonBtn.addEventListener('click', releaseBalloons);
 stopBalloonBtn.addEventListener('click', stopBalloons);
 
-// Post-countdown HBD music
-let postAudio=null,postPlaying=false;
-musicStopBtn.addEventListener('click',()=>{
-  if(postPlaying){postAudio.pause();postAudio=null;postPlaying=false;musicStopBtn.textContent='Play Music';}
-  else{postAudio=new Audio('hbd.mp3'); postAudio.loop=true; postAudio.play(); postPlaying=true; musicStopBtn.textContent='Stop Music';}
+// Post countdown HBD music
+let postAudio=null, postPlaying=false;
+musicStopBtn.addEventListener('click', ()=>{
+  if(postPlaying){ postAudio.pause(); postAudio=null; postPlaying=false; musicStopBtn.textContent='Play Music';}
+  else{ postAudio=new Audio('hbd.mp3'); postAudio.loop=true; postAudio.play(); postPlaying=true; musicStopBtn.textContent='Stop Music';}
 });
 </script>
 </body>
